@@ -11,6 +11,7 @@ import {
   mlAiOptions,
 } from "./options/data";
 import CLISection from "./components/CLISection";
+import { Category } from "./options/config";
 
 function useSingleSelect() {
   const [items, setItems] = useState<string[]>([]);
@@ -21,27 +22,15 @@ function useSingleSelect() {
 
 function useBackendSelect() {
   const [items, setItems] = useState<string[]>([]);
-
   const toggle = (label: string) => {
     setItems((prev) => {
-      if (prev.includes(label)) {
-        // Deselect
-        return prev.filter((l) => l !== label);
-      }
-      // If selecting Supabase, replace everything with just Supabase
-      if (label === "Supabase") {
-        return ["Supabase"];
-      }
-      // If Supabase is already selected, replace it with the new pick
-      if (prev.includes("Supabase")) {
-        return [label];
-      }
-      // Otherwise allow up to 2
+      if (prev.includes(label)) return prev.filter((l) => l !== label);
+      if (label === "Supabase") return ["Supabase"];
+      if (prev.includes("Supabase")) return [label];
       if (prev.length >= 2) return prev;
       return [...prev, label];
     });
   };
-
   return [items, toggle] as const;
 }
 
@@ -52,6 +41,15 @@ export default function Home() {
   const [userAuth, toggleAuth] = useSingleSelect();
   const [userRealtime, toggleRealtime] = useSingleSelect();
   const [userMlAi, toggleMlAi] = useSingleSelect();
+
+  const selections: Partial<Record<Category, string[]>> = {
+    frontend: userFrontend,
+    backend: userBackend,
+    database: userDatabase,
+    auth: userAuth,
+    realtime: userRealtime,
+    mlai: userMlAi,
+  };
 
   return (
     <main className="min-h-screen w-full px-36 py-12">
@@ -96,7 +94,7 @@ export default function Home() {
           />
         </div>
         <div className="flex-1 h-full">
-          <CLISection />
+          <CLISection selections={selections} />
         </div>
       </div>
     </main>
