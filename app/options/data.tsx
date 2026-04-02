@@ -18,8 +18,8 @@ const frontendOptions: IDataProps[] = [
 
 const backendOptions: IDataProps[] = [
   {
-    label: "Image1",
-    icon: <Image src="/image1.svg" alt="Image1" width={32} height={32} />,
+    label: "Supabase", // was "Image1"
+    icon: <Image src="/image1.svg" alt="Supabase" width={32} height={32} />,
   },
   {
     label: "Image6",

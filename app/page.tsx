@@ -12,28 +12,90 @@ import {
 } from "./options/data";
 import CLISection from "./components/CLISection";
 
+function useSingleSelect() {
+  const [items, setItems] = useState<string[]>([]);
+  const toggle = (label: string) =>
+    setItems((prev) => (prev.includes(label) ? [] : [label]));
+  return [items, toggle] as const;
+}
+
+function useBackendSelect() {
+  const [items, setItems] = useState<string[]>([]);
+
+  const toggle = (label: string) => {
+    setItems((prev) => {
+      if (prev.includes(label)) {
+        // Deselect
+        return prev.filter((l) => l !== label);
+      }
+      // If selecting Supabase, replace everything with just Supabase
+      if (label === "Supabase") {
+        return ["Supabase"];
+      }
+      // If Supabase is already selected, replace it with the new pick
+      if (prev.includes("Supabase")) {
+        return [label];
+      }
+      // Otherwise allow up to 2
+      if (prev.length >= 2) return prev;
+      return [...prev, label];
+    });
+  };
+
+  return [items, toggle] as const;
+}
+
 export default function Home() {
-  const [userFrontend, setUserFrontend] = useState<string[]>([]);
-  const [userBackend, setUserBackend] = useState<string[]>([]);
-  const [userDatabase, setUserDatabase] = useState<string[]>([]);
-  const [userAuth, setUserAuth] = useState<string[]>([]);
-  const [userRealtime, setUserRealtime] = useState<string[]>([]);
-  const [userMlAi, setUserMlAi] = useState<string[]>([]);
-  const [userDeployment, setUserDeployment] = useState<string[]>([]);
+  const [userFrontend, toggleFrontend] = useSingleSelect();
+  const [userBackend, toggleBackend] = useBackendSelect();
+  const [userDatabase, toggleDatabase] = useSingleSelect();
+  const [userAuth, toggleAuth] = useSingleSelect();
+  const [userRealtime, toggleRealtime] = useSingleSelect();
+  const [userMlAi, toggleMlAi] = useSingleSelect();
 
   return (
     <main className="min-h-screen w-full px-36 py-12">
       <h1 className="text-4xl font-bold mb-8">Project Starter CLI</h1>
-      <div className="w-full h-full flex items-start justify-center gap-auto">
-        <div className="flex flex-col justify-start gap-4">
-          <Section title="Frontend" content={frontendOptions} />
-          <Section title="Backend" content={backendOptions} />
-          <Section title="Database" content={databaseOptions} />
-          <Section title="Auth" content={authOptions} />
-          <Section title="Realtime" content={realtimeOptions} />
-          <Section title="ML/AI" content={mlAiOptions} />
+      <div className="w-full h-full flex items-start justify-between gap-8">
+        <div className="flex flex-col justify-start gap-4 shrink-0">
+          <Section
+            title="Frontend"
+            content={frontendOptions}
+            selected={userFrontend}
+            onSelect={toggleFrontend}
+          />
+          <Section
+            title="Backend"
+            content={backendOptions}
+            selected={userBackend}
+            onSelect={toggleBackend}
+          />
+          <Section
+            title="Database"
+            content={databaseOptions}
+            selected={userDatabase}
+            onSelect={toggleDatabase}
+          />
+          <Section
+            title="Auth"
+            content={authOptions}
+            selected={userAuth}
+            onSelect={toggleAuth}
+          />
+          <Section
+            title="Realtime"
+            content={realtimeOptions}
+            selected={userRealtime}
+            onSelect={toggleRealtime}
+          />
+          <Section
+            title="ML/AI"
+            content={mlAiOptions}
+            selected={userMlAi}
+            onSelect={toggleMlAi}
+          />
         </div>
-        <div className="w-full h-full">
+        <div className="flex-1 h-full">
           <CLISection />
         </div>
       </div>

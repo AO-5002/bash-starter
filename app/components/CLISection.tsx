@@ -16,8 +16,8 @@ function ActionBar() {
 function CLIOutput() {
   return (
     <div className="p-2 w-full h-full flex justify-start">
-      <p>
-        <code>echo &quot;Hello, World!&quot;</code>
+      <p className="text-sm text-zinc-400">
+        {<code>echo &quot;Hello, World!&quot;</code>}
       </p>
     </div>
   );
