@@ -10,7 +10,7 @@ function Btn({ icon }: IBtnProps) {
 
   return (
     <button
-      className="w-16 h-16 bg-white rounded flex items-center justify-center"
+      className="w-16 h-16 bg-white border border-zinc-800/20 rounded-lg flex flex-col items-center justify-center hover:scale-105 transition-transform duration-200"
       onClick={handleClick}
     >
       {icon}
